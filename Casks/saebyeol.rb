@@ -24,6 +24,18 @@ cask "saebyeol" do
 
   app "sbmd.app"
 
+  # Apple Developer ID 코드사이닝/노터리제이션 전까지는 macOS Gatekeeper
+  # 가 "악성 코드가 없음을 확인할 수 없습니다" 경고를 띄운다. brew cask
+  # 로 설치하는 사용자는 이 postflight 단계에서 quarantine 속성을 떼어
+  # 경고 없이 바로 실행할 수 있게 한다. (직접 dmg 다운로드 사용자는
+  # 첫 실행 시 우클릭 → 열기 또는 시스템 환경설정 → 개인정보 보호 및
+  # 보안 → "그래도 열기" 가 필요하다.)
+  postflight do
+    system_command "/usr/bin/xattr",
+                   args: ["-dr", "com.apple.quarantine", "#{appdir}/sbmd.app"],
+                   sudo: false
+  end
+
   # 앱을 제거할 때 함께 청소할 사용자 데이터 — 설정·자동완성 사용자
   # 사전·학습된 n-gram·캐시.
   zap trash: [
