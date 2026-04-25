@@ -1,13 +1,12 @@
 cask "saebyeol" do
   version "0.1.0"
 
-  # 첫 릴리스 직후에는 release CI 가 GitHub Release 에 dmg 를 올린 뒤
-  # 같은 워크플로에서 SHA 를 계산해 이 파일을 PR 로 갱신한다. 임시로
-  # `:no_check` 를 두는 사이엔 다운받은 바이너리 무결성 검사가 비활성화
-  # 되므로 가능한 한 빨리 실제 SHA 로 교체할 것.
-  sha256 "308532f8d46b64e5f2e0e69d4faad38d1352128be38f6cc53f935dc108647169"
-
   arch arm: "aarch64", intel: "x64"
+
+  # arch 별로 dmg 가 따로 빌드되므로 SHA256 도 둘로 분리한다. release CI 의
+  # bump-cask-sha 잡이 새 태그마다 두 값을 모두 자동 갱신한다.
+  sha256 arm:   "308532f8d46b64e5f2e0e69d4faad38d1352128be38f6cc53f935dc108647169",
+         intel: "6cec859956c591fcf41eee30cda5c6cbfd30d07c5aeb14671ac7da33b603401e"
 
   url "https://github.com/leaf-kit/saebyeol.md/releases/download/v#{version}/saebyeol_#{version}_#{arch}.dmg"
   name "Saebyeol"
