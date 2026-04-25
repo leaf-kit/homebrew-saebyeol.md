@@ -9,7 +9,7 @@ cask "saebyeol" do
 
   arch arm: "aarch64", intel: "x64"
 
-  url "https://github.com/leaf-kit/saebyeol.md/releases/download/v#{version}/sbmd_#{version}_#{arch}.dmg"
+  url "https://github.com/leaf-kit/saebyeol.md/releases/download/v#{version}/saebyeol_#{version}_#{arch}.dmg"
   name "Saebyeol"
   name "새별"
   desc "Markdown editor with built-in Hangul IME (모아치기 · 세벌식 · 두벌식)"
@@ -22,19 +22,14 @@ cask "saebyeol" do
 
   depends_on macos: ">= :big_sur"
 
-  app "sbmd.app"
+  app "saebyeol.app"
 
-  # Apple Developer ID 코드사이닝/노터리제이션 전까지는 macOS Gatekeeper
-  # 가 "악성 코드가 없음을 확인할 수 없습니다" 경고를 띄운다. brew cask
-  # 로 설치하는 사용자는 이 postflight 단계에서 quarantine 속성을 떼어
-  # 경고 없이 바로 실행할 수 있게 한다. (직접 dmg 다운로드 사용자는
-  # 첫 실행 시 우클릭 → 열기 또는 시스템 환경설정 → 개인정보 보호 및
-  # 보안 → "그래도 열기" 가 필요하다.)
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/sbmd.app"],
-                   sudo: false
-  end
+  # Apple Developer ID 코드사이닝/노터리제이션 전이라 첫 실행 시
+  # macOS Gatekeeper 가 경고를 띄운다. 그러나 quarantine 속성을 일부러
+  # 떼지 않고 그대로 두면, 사용자가 한 번 실행 시도 → 시스템 환경설정
+  # → 개인정보 보호 및 보안 → "차단했지만 그래도 열기" 를 통해 1회 승인
+  # 후 정상 실행할 수 있다. 빌드 측에서 ad-hoc 서명을 붙여 두었으므로
+  # 이 흐름이 정상적으로 동작한다.
 
   # 앱을 제거할 때 함께 청소할 사용자 데이터 — 설정·자동완성 사용자
   # 사전·학습된 n-gram·캐시.
